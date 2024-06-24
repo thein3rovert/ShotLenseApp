@@ -1,6 +1,7 @@
 package com.thein3rovert.shotLensApp.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.thein3rovert.shotLensApp.domain.RequestContext;
 import com.thein3rovert.shotLensApp.exception.CustomApiException;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -46,24 +47,23 @@ public abstract class Auditable {
 
     @PrePersist
     public void beforePersist() {
-        var userId = 1L;
+        var userId = RequestContext.getUserId();
         if (userId == null) {
             throw new CustomApiException("Cannot persist this entity without it's user ID in the request Context for this thread");
-            setCreatedAt(LocalDateTime.now());
-            setCreatedBy(userId);
-            setUpdatedBy(userId);
-            setUpdatedAt(LocalDateTime.now());
         }
+        setCreatedAt(LocalDateTime.now());
+        setCreatedBy(userId);
+        setUpdatedBy(userId);
+        setUpdatedAt(LocalDateTime.now());
     }
 
-        @PostPersist
-        public void beforeUpdate() {
-            var userId = 1L;
-            if (userId == null) {
-                throw new CustomApiException("Cannot update this entity without it's user ID in the request Context for this thread" );
-                setUpdatedAt(LocalDateTime.now());
-                setUpdatedBy(userId);
-            }
-        }
+    @PostPersist
+    public void beforeUpdate() {
+        var userId = RequestContext.getUserId();
+        if (userId == null) {
+            throw new CustomApiException("Cannot update this entity without it's user ID in the request Context for this thread");}
+            setUpdatedAt(LocalDateTime.now());
+            setUpdatedBy(userId);#
+    }
 }
 
