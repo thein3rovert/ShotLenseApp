@@ -1,29 +1,68 @@
 package com.thein3rovert.shotLensApp.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.antlr.v4.runtime.misc.NotNull;
+
+import org.hibernate.annotations.NotFound;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.util.AlternativeJdkIdGenerator;
+
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
-//@Setter
+@Setter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-@JsonIgnoreProperties(value = { "createdAt", "updatedAt" }, allowGetters = true)
+@JsonIgnoreProperties(value = { "createdAt", "updatedAt" }, allowGetters = true) // Ignore properties during Json Serlization
 public abstract class Auditable {
+    @Id
+    @SequenceGenerator(name = "primary_key_seq", sequenceName = "primary_key_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "primary_key_seq")
+
+    @Column(name = "id", updatable = false)
     private Long id;
     private String referenceId = new AlternativeJdkIdGenerator().generateId().toString(); // Id will be used to identity resources.
 
     @NotNull
     private Long createdBy; //who created the entity and who updated the entity.
+    @NotNull
     private Long updatedBy;
+
+    @NotNull
+    @Column(name = "created_at", nullable = false, updatable = false)
+    @CreatedDate
     private LocalDateTime createdAt; //Time an entity was created and updated.
+    @Column(name = "updated_at", nullable = false)
+    @CreatedDate
     private LocalDateTime updatedAt;
+
+    //Todo: 1. Create PrePersist and PreUodate, add annotations to Id;
+
+    @PrePersist
+    public void beforePersist() {
+        var userId = 1L;
+        if (userId == null) {
+            throw new CustomApiException("Cannot persist this entity without it's user ID in the request Context for this thread");
+            setCreatedAt(LocalDateTime.now());
+            setCreatedBy(userId);
+            setUpdatedBy(userId);
+            setUpdatedAt(LocalDateTime.now());
+        }
+    }
+
+        @PostPersist
+        public void beforeUpdate() {
+            var userId = 1L;
+            if (userId == null) {
+                throw new CustomApiException("Cannot update this entity without it's user ID in the request Context for this thread" );
+                setUpdatedAt(LocalDateTime.now());
+                setUpdatedBy(userId);
+            }
+        }
 }
+
