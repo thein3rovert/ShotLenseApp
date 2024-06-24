@@ -1,7 +1,9 @@
 package com.thein3rovert.shotLensApp.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.thein3rovert.shotLensApp.exception.CustomApiException;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,7 +15,6 @@ import org.springframework.util.AlternativeJdkIdGenerator;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-
 @Getter
 @Setter
 @MappedSuperclass
