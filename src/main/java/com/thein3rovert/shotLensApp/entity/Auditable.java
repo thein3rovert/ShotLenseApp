@@ -63,7 +63,7 @@ public abstract class Auditable {
         if (userId == null) {
             throw new CustomApiException("Cannot update this entity without it's user ID in the request Context for this thread");}
             setUpdatedAt(LocalDateTime.now());
-            setUpdatedBy(userId);#
+            setUpdatedBy(userId);
     }
 }
 
