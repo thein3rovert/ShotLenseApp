@@ -2,6 +2,7 @@ package com.thein3rovert.shotLensApp.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.thein3rovert.shotLensApp.enumeration.UserAuthority;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.*;
@@ -19,6 +20,6 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
 @JsonInclude(NON_DEFAULT)
 public class UserRoleEntity extends Auditable{
     private String rolenames;
-    private String roleAuthorities;
+    private UserAuthority roleAuthorities;
 
 }
