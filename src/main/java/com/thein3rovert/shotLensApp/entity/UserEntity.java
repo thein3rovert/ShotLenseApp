@@ -24,8 +24,14 @@ public class UserEntity extends Auditable {
     private String lastLogin;
     private String loginAttempts;
     private String phone;
+
+    //Photographer related fields
     private String bio;
-    private String ImageUrl;
+    private String profileImageUrl;
+    private String photographyTypes;
+
+    // Athletes related fields
+    private String sportTypes;
 
     //Not planning to implement but lets add these.
     private boolean accountNonExpired;
@@ -41,7 +47,5 @@ public class UserEntity extends Auditable {
                     name = "role_id", referencedColumnName = "id")
     )
     private UserRoleEntity roles;
-
-
 }
 
